@@ -272,14 +272,14 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
   * ```sh
     source .zshrc
     ```
-    
+
   * 配置vim式编辑方式：
-  
+
     ```sh
     git clone https://github.com/jeffreytse/zsh-vi-mode \
       $ZSH_CUSTOM/plugins/zsh-vi-mode
     ```
-  
+
     修改```.zshrc```
 
 #### 7. 修改系统时间
@@ -528,7 +528,28 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
 * 初始化hexo
 
   ```sh
-  hexo init hexo
+  hexo init myblog-hexo
   ```
 
-* 
+* 使用systemd[A systemD unit file for Hexo](https://chrisbergeron.com/2017/10/07/hexo_systemd_unit_file/)
+
+  ```sh
+  [Service]
+  WorkingDirectory=/home/[yourdirectory]/blog
+  ExecStart=/bin/hexo server -p80
+  Restart=always
+  StandardOutput=syslog
+  StandardError=syslog
+  SyslogIdentifier=hexo
+  User=root
+  Group=root
+  Environment=NODE_ENV=production
+  
+  [Install]
+  WantedBy=multi-user.target
+  ```
+
+  
+
+  
+
