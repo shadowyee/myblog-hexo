@@ -3,13 +3,13 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: Enderatink-Blog
 subtitle: ''
 description: ''
 keywords:
-author: Shadowyee
+author: Enderatink
 language: cn
-timezone: 'China'
+timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
