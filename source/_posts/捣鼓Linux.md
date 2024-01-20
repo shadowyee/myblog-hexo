@@ -1,6 +1,17 @@
 ---
 title: 捣鼓Linux
 ---
+
+
+
+## 捣鼓Linux
+
+--也许会整理成比较系统的教程:)
+
+---
+
+### 在x86平台上安装Debian(HP-T520, )
+
 #### 1. 启动盘制作
 
 * 准备4GB以上的U盘
@@ -19,6 +30,12 @@ title: 捣鼓Linux
 #### 3. 系统配置
 
 ##### 3.1 换源(Debian)
+
+* 尽量先下载```ca-certificates```：
+
+  ```sh
+  sudo apt install ca-certificates
+  ```
 
 * 注意Debian各个发行版的名称：
 
@@ -161,9 +178,15 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
   sudo passwd username
   ```
 
+##### 3.6 系统信息查询
+
+* ```sh
+  uname -a
+  ```
+
 #### 4. 代理配置
 
-基于[ikuuu](ikuuu.art)提供的免费代理
+（1）基于[ikuuu](ikuuu.art)提供的免费代理
 
 * 在用户目录下创建 clash 文件夹
 
@@ -191,6 +214,8 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
 
 * ~~这一步似乎无效：打开系统设置，选择网络，选择手动，填写 HTTP 和 HTTPS 代理为 `127.0.0.1:7890`，填写 Socks 主机为 `127.0.0.1:7891`，即可启用系统代理（clash成功启动后会显示对应的ip地址和端口）~~
 
+（2）使用go-graft
+
 #### 5. git配置
 
 * 下载git
@@ -207,6 +232,17 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
   git config --global user.name "xxx"
   git config --global user.email xxx
   ```
+
+* ssh-key配置
+
+  ```sh
+  ssh-keygen -t rsa -C "your_email@example.com"
+  ssh -T git@ssh.github.com
+  ```
+
+* wsl使用ssh连接github.com出现问题：
+
+  https://gist.github.com/Tamal/1cc77f88ef3e900aeae65f0e5e504794
 
 #### 6. zsh配置与美化
 
@@ -358,7 +394,82 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
 
   则需要根据报错中提供的```.ssh/known_hosts```地址，在该主机上删除远程服务器ip地址对应的内容条目或将其修改为正确的host key即可
 
-#### 9. Vim-adventures部署
+#### 9. Vim
+
+* command模式下：
+
+  ```sh
+  :help :w      	# command模式下的w
+  :help w       	# normal模式下的w
+  
+  # Vim有许多标签页tab，每个标签页有一些窗口window，每个窗口对应一个缓冲区buffer，每个缓冲区可以有多个窗口
+  :sp				# 将同一文本分为两个窗口
+  :q 				# 关闭一个窗口或标签
+  :qa 			# 关闭所有窗口和标签
+  
+  ```
+
+* normal模式下：
+
+  ```sh
+  w				# 向前移动一个单词 word
+  b				# 向后移动一个单词 back
+  e				# 跳到单词末尾 end of word 
+  0				# 移动到行的开头 regex
+  $				# 移动到行的末尾 regex
+  ^				# 移动到行的第一个非空字符 regex
+  ctrl-c			# 向上滚动 up
+  ctrl-d			# 向下滚动 down
+  G				# 移动到文本的底部
+  gg				# 移动到文本的顶部
+  L				# 将光标移动到屏幕上显示的底部 lowest
+  M				# 将光标移动到屏幕上显示的中间 middle
+  H				# 将光标移动到屏幕上显示的顶部 highest
+  f-?				# 找到该行上光标后的第一个？字母 find
+  F-?				# 找到该行上光标前的第一个？字母 find back
+  t-?				# 找到该行上光标后的第一个？字母的前一个字母 to
+  T-?				# 找到该行上光标前的第一个？字母的后一个字母 to back
+  o				# 向下新建一行并进入insert模式
+  O				# 向上新建一行并进入insert模式
+  d				# 删除，需要与移动命令结合使用 delete
+  dd				# 删除指定行
+  u				# 撤销 undo
+  ctrl-r			# 重做，与撤销相反 redo
+  c				# 改变，在d的基础上进入insert模式 change
+  c				# 删除指定行并进入insert模式
+  x				# 删除一个字符
+  r-?				# 将当前字符替换为？	replace
+  y				# 复制，需要与移动命令结合使用 yank
+  yy				# 复制当前行
+  p				# 粘贴 paste
+  ~				# 大小写转换
+  num-cmd			# 计数符，执行cmd操作num次，4k则为向上移动4行，d4w删除4个单词
+  i				# 修饰符，括号内，di[删除中括号内的所有内容 inside
+  a				# 修饰符，括号及括号内，da[删除中括号内的所有内容以及中括号 around
+  %				# 光标需要在括号上，实现两个括号之间的来回跳转
+  /-*				# 在全文搜索*，按n查找下一个
+  .				# 重复前一个编辑命令
+  ```
+
+* visual模式：
+
+  ```sh
+  # 如果要复制文字块，则需要进入visual模式
+  移动操作：h,j,k,l; w,e,b...
+  y				# 复制选中的文本块
+  insert模式中的一些操作也可以用，比如删除，大小写转换等
+  # 普通visual模式，按v进入
+  # visual line模式，按V进入，每次选中一行
+  # visual block模式，按ctrl-v进入，每次选中一矩形块文本
+  ```
+
+##### 9.1 .vimrc配置
+
+* 一些好用的vim插件：
+
+  
+
+##### 9.2 Vim-adventure部署
 
 * 下载并安装nodejs：
 
@@ -403,6 +514,8 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
   ```
 
   注意，需要修改```routes/index.js```中的```appDir```变量（添加一个绝对路径，该路径下包含```saved```文件夹），或者修改环境变量```APP_DIR```（修改环境变量目前不成功，似乎需要修改sudo模式下的环境变量），否则游戏进度无法正常保存
+
+
 
 #### 10. systemd编程
 
@@ -497,7 +610,7 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
 
 
 
-#### 15.Go-graft
+#### 15. Go-graft
 
 * [go-graft](https://github.com/mzz2017/gg)
 
@@ -549,7 +662,289 @@ curl /cgi-bin/srun_portal?callback=jQuery112402779513334089566_1690089329252&act
   WantedBy=multi-user.target
   ```
 
-  
+#### 17. Cron
 
+
+
+---
+
+### WSL
+
+#### 1. 安装
+
+* [How to install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+* ```sh
+  wsl --list --online
+  wsl --install -d xxx
+  ```
+
+#### 2.配置代理
+
+* [为 WSL2 一键设置代理](https://zhuanlan.zhihu.com/p/153124468)
+
+  ```sh
+  export ALL_PROXY="127.0.0.1:7890"
+  ```
+
+#### 3. linux清空命令行快捷键
+
+>  在 Linux 中，可以使用以下快捷键清空命令行：
+>
+>  1. Ctrl + L：清空当前命令行窗口。
+>  2. Ctrl + U：清空当前命令行中光标所在位置及之前的所有内容。
+>  3. Ctrl + K：清空当前命令行中光标所在位置及之后的所有内容。
+>  4. Ctrl + W：删除当前命令行中光标所在位置之前的一个单词。
+>  5. Ctrl + C：终止当前正在运行的命令。
+
+### Linux一些好用的包
+
+* ripgrep
+* Crtl+R反向搜索命令，建议使用fzf
+
+* tree, broot, nnn
+
+
+
+---
+
+### The Missing Semester
+
+--learn from the MIT 2020: The Missing Semester of Your CS Education
+
+建议根据官方文档来完善
+
+---
+
+#### 1. Data Wrangling
+
+* 在服务器上运行命令：
+
+  ```sh
+  ssh servername 'journalctl | grep ssh | grep "Disconnected from"' | less # 单引号内命令在服务器上运行，less在本地运行
+  ```
+
+* sed
+
+  一种流编辑器，是运行在流上的完整编程语言
+
+  ```sh
+  cat ssh.log | sed 's/.*Disconnected from //'	# s代表替换，第一个'/'后是被替换的内容；第二个'/'是替换后的内容，此处为空
+  echo 'abc' | sed 's/[ab]//g'	# sed默认只匹配一次，添加参数g可以匹配多次
+  echo 'abcaba' | sed -E 's/(ab)*//g'		# sed是很古老的编辑器，只支持旧的正则表达式，所以需要加上参数-E，否则这里的括号需要加上转义符\
+  cat ssh.log | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/'		# 任意一个()都是一个捕获组，可以在替换时引用它们，使用\2引用第二个捕获组
+  ```
+
+* awk
+
+  一中列数据流处理器
+
+* Regular Expression
+
+  一种强大的匹配文本的方法，一般默认按行匹配而不跨行匹配
+
+  ```sh
+  .     		# 任意单个字符
+  *  			# 跟在某个字符后面，表示0个或多个该字符，是贪婪的，会尽可能匹配多的字符
+  + 			# 跟在某个字符后面，表示1个或多个该字符，是贪婪的，会尽可能匹配多的字符
+  []			# 匹配括号内任意一个字符
+  ()			# 匹配括号内的字符串
+  0-9			# 从0到9
+  ^ 			# 匹配行的开头
+  $			# 匹配行的结尾
+  | 			# 或
+  ?			# 使贪婪匹配变为首次匹配
+  ```
+
+* wc
+
+  word count计数
+
+  ```sh
+  wc -l		# 计算行数
+  ```
+
+* sort
+
+  排序，默认按升序排列
+
+  ```sh
+  sort -nk1,1	# -n表示按数字排序，-k表示选择输入中以空格为分隔的列来执行排序，1,1表示从第一列开始到第一列结束，即按第一列排序
+  ```
+
+* uniq
+
+  从有序列表中去掉重复的行
+
+  ```sh
+  uniq -c 	# 去掉重复的行并计算重复的次数
+  ```
+
+* head
+
+  获取前几行数据
+
+  ```sh
+  head -n10	# 获取前10行数据
+  ```
+
+* tail
+
+  获取末尾几行数据
+
+  ```sh
+  tail -n10	# 获取末尾10行数据
+  ```
+
+* paste
+
+  将很多行合并为一行
+
+  ```sh
+  paste -sd,	# 将不同的行以,为分隔符并合并为一行
+  ```
+
+* bc
+
+  计算器
+
+  ```sh
+  echo "1 + 2" | bc -l
+  ```
+
+* R
+
+  专门用于统计分析的工具，也是一种编程语言
+
+* gnuplot
+
+  从标准输出中获取内容的绘图工具
+
+* xargs
+
+  将输入列表转换为参数
+
+#### 2. Job Control
+
+* ```sh
+  man signal 			# 查看信号列表，通过kill命令发送信号
+  ```
+
+* ```sh
+  ctrl-z				# 暂停进程
+  xxx &				# 使进程在后台运行
+  jobs				# 查看当前工作（包括每个工作的状态）
+  bg %num				# 继续某个暂停的工作，num在使用jobs命令的第一列会显示
+  fg %num				# 继续某个暂停的工作，并将其恢复到前台并重新连接到标准输出
+  kill %num			# 直接停止某个工作
+  kill -STOP %num		# 向某个工作发送暂停信号
+  kill -HUP %num		# 向某个工作发送挂起信号
+  kill -KILL %num		# 向某个工作发送停止信号
+  nohup cmd			# 会将执行的命令cmd封装起来，忽略任何挂起信号，并使其继续执行，即使关闭终端窗口也会继续执行
+  ```
+
+#### 3. Terminal Multiplexes
+
+* sessions
+
+  * windows
+    * panes
+
+* tmux
+
+  运行tmux时，启动一个会话，相当于在原本的shell中启动tmux进程，然后tmux又打开一个新的shell，tmux进程和原本的shell进程是分开的；
+
+  在远程连接时，关闭连接，发送挂起信号，已启动的tmux不会关闭
+
+  ```sh
+  # session - 每个会话都是一个独立的工作区，其中包含一个或多个窗口
+  tmux 开始一个新的会话
+  tmux new -s NAME 以指定名称开始一个新的会话
+  tmux ls 列出当前所有会话
+  在 tmux 中输入 ctrl-b d ，将当前会话分离
+  tmux a 重新连接最后一个会话。您也可以通过 -t 来指定具体的会话
+  # windows - 相当于编辑器或是浏览器中的标签页，从视觉上将一个会话分割为多个部分
+  ctrl-b c 创建一个新的窗口，使用ctrl-d关闭 create
+  ctrl-b N 跳转到第 N 个窗口，注意每个窗口都是有编号的
+  ctrl-b p 切换到前一个窗口
+  ctrl-b n 切换到下一个窗口
+  ctrl-b , 重命名当前窗口
+  ctrl-b w 列出当前所有窗口
+  # panes - 像 vim 中的分屏一样，面板使我们可以在一个屏幕里显示多个 shell
+  ctrl-b " 水平分割
+  ctrl-b % 垂直分割
+  ctrl-b <方向> 切换到指定方向的面板，<方向> 指的是键盘上的方向键
+  ctrl-b z 切换当前面板的缩放 zoom
+  ctrl-b [ 开始往回卷动屏幕。您可以按下空格键来开始选择，回车键复制选中的部分
+  ctrl-b <空格> 在不同的面板排布间切换
+  ```
+
+#### 4. Alias
+
+* 默认情况下 shell 并不会保存别名。为了让别名持续生效，需要将配置放进 shell 的启动文件里，像是`.bashrc` 或 `.zshrc`
+
+  ```sh
+  # 创建常用命令的缩写
+  alias ll="ls -lh"
   
+  # 能够少输入很多
+  alias gs="git status"
+  alias gc="git commit"
+  alias v="vim"
+  
+  # 手误打错命令也没关系
+  alias sl=ls
+  
+  # 重新定义一些命令行的默认行为
+  alias mv="mv -i"           # -i prompts before overwrite
+  alias mkdir="mkdir -p"     # -p make parent dirs as needed
+  alias df="df -h"           # -h prints human readable format
+  
+  # 别名可以组合使用
+  alias la="ls -A"
+  alias lla="la -l"
+  
+  # 在忽略某个别名
+  \ls
+  # 或者禁用别名
+  unalias la
+  
+  # 获取别名的定义
+  alias ll
+  # 会打印 ll='ls -lh'
+  ```
+
+#### 5. Dotfiles
+
+* ```sh
+  bash - ~/.bashrc, ~/.bash_profile
+  git - ~/.gitconfig
+  vim - ~/.vimrc 和 ~/.vim 目录
+  ssh - ~/.ssh/config
+  tmux - ~/.tmux.conf
+  ```
+
+* dotfiles的相关资源：
+
+  github上的dotfiles仓库：https://github.com/mathiasbynens/dotfiles
+
+  https://dotfiles.github.io/
+
+* 可移植性：
+
+  ```sh
+  if [[ "$(uname)" == "Linux" ]]; then {do_something}; fi
+  
+  # 使用和 shell 相关的配置时先检查当前 shell 类型
+  if [[ "$SHELL" == "zsh" ]]; then {do_something}; fi
+  
+  # 您也可以针对特定的设备进行配置
+  if [[ "$(hostname)" == "myServer" ]]; then {do_something}; fi
+  ```
+
+* stow的使用：
+
+  https://brandon.invergo.net/news/2012-05-26-using-gnu-stow-to-manage-your-dotfiles.html
+
+#### 6. Remote Machine
 
